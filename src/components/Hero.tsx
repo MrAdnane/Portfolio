@@ -27,12 +27,17 @@ export function Hero() {
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   const codeLines = [
-    `const developer = {`,
-    `  name: "Adnane Mouloudi",`,
-    `  role: "Full Stack Dev",`,
-    `  stack: ["React", "Node", "Laravel"],`,
-    `  passion: "Building the web"`,
-    `};`,
+    `function Developer() {`,
+    `  const skills = ['View Skills', 'View Projects'];`,
+    `  const passion = 'Creating amazing web experiences';`,
+    ``,
+    `  return (`,
+    `    <Developer`,
+    `      isAvailable={true}`,
+    `      lookingFor="Exciting projects"`,
+    `    />`,
+    `  );`,
+    `}`,
   ];
 
   return (
