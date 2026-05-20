@@ -16,7 +16,7 @@ export function Contact() {
   const info = [
     { icon: Mail, value: "adn.mouloudi@gmail.com", href: "mailto:adn.mouloudi@gmail.com" },
     { icon: Phone, value: "+212 646 831 912", href: "tel:+212646831912" },
-    { icon: MapPin, value: t.contact.location, href: "#" },
+    { icon: MapPin, value: t.contact.location, href: null as string | null },
   ];
 
   return (
@@ -38,18 +38,21 @@ export function Contact() {
             viewport={{ once: true }}
             className="space-y-4"
           >
-            {info.map((it, i) => (
-              <a
-                key={i}
-                href={it.href}
-                className="flex items-center gap-4 p-4 rounded-lg bg-card border border-border hover:border-primary/60 transition-all group"
-              >
-                <div className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                  <it.icon size={18} />
-                </div>
-                <span className="text-foreground/90">{it.value}</span>
-              </a>
-            ))}
+            {info.map((it, i) => {
+              const Tag = it.href ? "a" : "div";
+              return (
+                <Tag
+                  key={i}
+                  {...(it.href ? { href: it.href } : {})}
+                  className="flex items-center gap-4 p-4 rounded-lg bg-card border border-border hover:border-primary/60 transition-all group"
+                >
+                  <div className="w-10 h-10 rounded-full bg-primary/15 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                    <it.icon size={18} />
+                  </div>
+                  <span className="text-foreground/90">{it.value}</span>
+                </Tag>
+              );
+            })}
             <div className="flex gap-3 pt-2">
               <a
                 href="https://github.com/MrAdnane"
