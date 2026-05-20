@@ -1,26 +1,39 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { LangProvider, useLang } from "@/lib/i18n";
+import { Navbar } from "@/components/Navbar";
+import { Hero } from "@/components/Hero";
+import { Projects } from "@/components/Projects";
+import { Skills } from "@/components/Skills";
+import { About } from "@/components/About";
+import { Contact } from "@/components/Contact";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
+function Footer() {
+  const { t } = useLang();
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <footer className="py-8 px-6 border-t border-border text-center text-sm text-muted-foreground">
+      {t.footer}
+    </footer>
   );
 }
 
 function Index() {
-  return <PlaceholderIndex />;
+  return (
+    <LangProvider>
+      <div className="min-h-screen bg-background text-foreground">
+        <Navbar />
+        <main>
+          <Hero />
+          <Projects />
+          <Skills />
+          <About />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
+    </LangProvider>
+  );
 }
