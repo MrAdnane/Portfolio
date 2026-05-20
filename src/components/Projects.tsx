@@ -1,22 +1,25 @@
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { useLang } from "@/lib/i18n";
+import quoteImg from "@/assets/quote-machine.jpg";
+import pomodoroImg from "@/assets/pomodoro.jpg";
+import calculatorImg from "@/assets/calculator.jpg";
 
 const data = [
   {
     link: "https://codepen.io/editor/Adnane-Mouloudi/pen/019e097b-3a78-7bd6-8588-3c1840ce8631",
     tech: ["HTML", "CSS", "JavaScript", "API"],
-    accent: "from-primary/30 to-transparent",
+    image: quoteImg,
   },
   {
     link: "https://codepen.io/editor/Adnane-Mouloudi/pen/019e0c09-30cc-7c1e-aead-4fdb386ae406",
     tech: ["React", "CSS", "JavaScript"],
-    accent: "from-primary/40 to-transparent",
+    image: pomodoroImg,
   },
   {
     link: "https://codepen.io/editor/Adnane-Mouloudi/pen/019e099d-227a-7d11-883f-8bb6496e2458",
     tech: ["React", "JavaScript", "CSS"],
-    accent: "from-primary/30 to-transparent",
+    image: calculatorImg,
   },
 ];
 
@@ -45,13 +48,14 @@ export function Projects() {
               whileHover={{ y: -6 }}
               className="group relative rounded-xl bg-card border border-border overflow-hidden glow-card transition-all"
             >
-              <div className={`h-44 bg-gradient-to-br ${data[i].accent} bg-muted relative overflow-hidden`}>
-                <div className="absolute inset-0 grid-bg opacity-30" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-6xl font-bold text-primary/40 group-hover:text-primary/70 transition-colors">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
+              <div className="h-44 bg-muted relative overflow-hidden">
+                <img
+                  src={data[i].image}
+                  alt={p.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent pointer-events-none" />
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold text-primary mb-2">{p.title}</h3>
