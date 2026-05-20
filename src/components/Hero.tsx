@@ -22,13 +22,85 @@ function Typed({ text }: { text: string }) {
   );
 }
 
+type Token = { t: string; c?: string };
+
+function highlight(line: string): Token[] {
+  // Tokenize with a single regex: keywords, strings, booleans, punctuation, identifiers
+  const regex =
+    /(\/\/[^\n]*)|('[^']*'|"[^"]*")|\b(function|const|let|return|true|false|null)\b|([A-Z][A-Za-z0-9_]*)|([a-zA-Z_][a-zA-Z0-9_]*)|([{}()\[\]<>;,=\/])|(\s+)/g;
+  const tokens: Token[] = [];
+  let m: RegExpExecArray | null;
+  let last = 0;
+  while ((m = regex.exec(line))) {
+    if (m.index > last) tokens.push({ t: line.slice(last, m.index) });
+    const [full, comment, str, kw, cap, id, punct, ws] = m;
+    if (comment) tokens.push({ t: full, c: "text-muted-foreground/70 italic" });
+    else if (str) tokens.push({ t: full, c: "text-amber-300" });
+    else if (kw)
+      tokens.push({
+        t: full,
+        c: kw === "true" || kw === "false" || kw === "null" ? "text-orange-400" : "text-fuchsia-400",
+      });
+    else if (cap) tokens.push({ t: full, c: "text-cyan-300" });
+    else if (id) tokens.push({ t: full, c: "text-primary" });
+    else if (punct) tokens.push({ t: full, c: "text-foreground/60" });
+    else if (ws) tokens.push({ t: full });
+    last = regex.lastIndex;
+  }
+  if (last < line.length) tokens.push({ t: line.slice(last) });
+  return tokens;
+}
+
+function TypedCode({ lines, speed = 18 }: { lines: string[]; speed?: number }) {
+  const full = lines.join("\n");
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    setI(0);
+    const id = setInterval(() => {
+      setI((p) => {
+        if (p >= full.length) {
+          clearInterval(id);
+          return p;
+        }
+        return p + 1;
+      });
+    }, speed);
+    return () => clearInterval(id);
+  }, [full, speed]);
+
+  const shown = full.slice(0, i);
+  const done = i >= full.length;
+  const shownLines = shown.split("\n");
+
+  return (
+    <pre className="font-mono text-[13px] leading-6 whitespace-pre">
+      {shownLines.map((ln, idx) => (
+        <div key={idx}>
+          {highlight(ln).map((tok, k) => (
+            <span key={k} className={tok.c}>
+              {tok.t}
+            </span>
+          ))}
+          {idx === shownLines.length - 1 && (
+            <span
+              className={`inline-block w-[7px] h-[14px] -mb-[2px] ml-[1px] bg-primary ${
+                done ? "animate-pulse" : ""
+              }`}
+            />
+          )}
+        </div>
+      ))}
+    </pre>
+  );
+}
+
 export function Hero() {
   const { t, lang } = useLang();
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   const codeLines = [
     `function Developer() {`,
-    `  const skills = ['View Skills', 'View Projects'];`,
+    `  const skills = ['${t.nav.skills}', '${t.nav.projects}'];`,
     `  const passion = 'Creating amazing web experiences';`,
     ``,
     `  return (`,
@@ -78,25 +150,21 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.2 }}
           className="relative"
         >
-          <div className="rounded-xl border border-primary/30 bg-card/80 backdrop-blur p-6 glow-border font-mono text-sm">
-            <div className="flex gap-1.5 mb-4">
-              <span className="w-3 h-3 rounded-full bg-destructive/70" />
-              <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
-              <span className="w-3 h-3 rounded-full bg-primary/70" />
+          <motion.div
+            animate={{ y: [0, -10, 0], rotate: [-1.5, -2.5, -1.5] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="relative"
+          >
+            <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-3xl" />
+            <div className="relative rounded-xl border border-primary/40 bg-card/80 backdrop-blur p-6 glow-border overflow-hidden">
+              <div className="flex gap-1.5 mb-4">
+                <span className="w-3 h-3 rounded-full bg-destructive/70" />
+                <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
+                <span className="w-3 h-3 rounded-full bg-primary/70" />
+              </div>
+              <TypedCode key={lang} lines={codeLines} />
             </div>
-            {codeLines.map((line, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 + i * 0.15 }}
-                className="text-primary/90"
-              >
-                <span className="text-muted-foreground mr-3">{i + 1}</span>
-                {line}
-              </motion.div>
-            ))}
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
