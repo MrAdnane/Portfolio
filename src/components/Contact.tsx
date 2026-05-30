@@ -14,8 +14,8 @@ export function Contact() {
   };
 
   const info = [
-    { icon: Mail, value: "adn.mouloudi@gmail.com", href: "mailto:adn.mouloudi@gmail.com" },
-    { icon: Phone, value: "+212 646 831 912", href: "tel:+212646831912" },
+    { icon: Mail, value: "adn.mouloudi@gmail.com", href: null as string | null },
+    { icon: Phone, value: "+212 646 831 912", href: null as string | null },
     { icon: MapPin, value: t.contact.location, href: null as string | null },
   ];
 
