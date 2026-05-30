@@ -35,8 +35,8 @@ export function About() {
           >
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">{t.about.text}</p>
             <a
-              href="#"
-              onClick={(e) => e.preventDefault()}
+              href="/CV_Mouloudi_Adnane.pdf"
+              download
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-md font-semibold hover:bg-primary-glow transition-all glow-border"
             >
               <Download size={18} />
